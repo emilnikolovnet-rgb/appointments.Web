@@ -2,7 +2,7 @@ name: Build and Push to Azure CR
 
 on:
   push:
-    branches: [ "main" ] # Triggers when you push to main
+    branches: [ "main" ] # Triggers when you push to maina
 
 jobs:
   build-and-push:

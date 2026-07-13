@@ -1,0 +1,67 @@
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-secondary fw-bold">Appointments</h2>
+        <span class="badge bg-primary fs-6">{{ appointments.length }} count</span>
+    </div>
+    <button (click)="openAppointmentForm()" class="btn btn-primary rounded-0 rounded-top w-15 py-2 fw-bold mb-2">Add New</button>
+    <div class="table-responsive shadow-sm rounded border">
+        <table class="table table-hover table-striped align-middle mb-0">
+            <thead class="table-light text-uppercase fs-7 text-muted">
+                <th scope="col" class="ps-4">ID</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Scheduled Date</th>
+                <th scope="col">Additional info</th>
+                <th scope="col" class="pe-4">Actions</th>
+            </thead>
+            <tbody>
+            @for(appointment of pagedAppointments; track appointment.id)
+            {
+                <tr>
+                    <td class="ps-4 bold text-muted">{{ appointment.id }}</td>
+                    <td>{{ appointment.firstName }}</td>
+                    <td>{{ appointment.lastName }}</td>
+                    <td><span class="text-dark">
+                        {{ appointment.scheduledDate | date:'dd.MM.yyyy, HH:mm' }}
+                        </span>
+                    </td>
+                    <td>
+                        @if (appointment.additionalInfo) {
+                            {{ appointment.additionalInfo }}
+                        } @else {
+                            <span class="text-muted fst-italic fs-7">No info</span>
+                        }
+                    </td>
+                    <td class="pe-4">
+                        <button class="btn btn-outline-primary btn-sm me-2" (click)="openAppointmentForm(appointment.id)">Edit</button>
+                        <button class="btn btn-outline-danger btn-sm" (click)="deleteAppointment(appointment.id)">Delete</button>
+                    </td>
+                </tr>
+            }
+            @empty {
+                <tr><td colspan="6" class="text-center text-muted">No appointments</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <button (click)="openAppointmentForm()" class="btn btn-primary rounded-0 rounded-top w-15 py-2 fw-bold mt-2">Add New</button>
+        @if (appointments.length > 0) {
+            <p class="pagination-controls mt-2 align-items-right d-flex justify-content-end">
+                <button class="me-1"
+                    [disabled]="currentPage === 1" 
+                    (click)="goToPage(currentPage - 1)">
+                    Previous
+                </button>
+
+                <span>Page {{ currentPage }} of {{ totalPages }}</span>
+
+                <button class="ms-1"
+                    [disabled]="currentPage === totalPages" 
+                    (click)="goToPage(currentPage + 1)">
+                    Next
+                </button>
+            </p>
+        }
+    </div>
+</div>

@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule, MatOption } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
+import { Appointment } from '../Models/Appointment';
 
 export const MY_DATE_FORMATS = {
   parse: {

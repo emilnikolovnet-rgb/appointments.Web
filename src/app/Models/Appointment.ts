@@ -1,4 +1,4 @@
-interface Appointment {
+export interface Appointment {
     id: number,
     firstName: string,
     lastName: string,

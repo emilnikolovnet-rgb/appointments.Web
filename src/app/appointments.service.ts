@@ -1,12 +1,14 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
+import { environment } from "../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentsService {
-  private readonly apiUrl = 'https://localhost:7009/appointments';
+
+private apiUrl = environment.apiUrl;
 
   availableTimes: string[] = [
     '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'

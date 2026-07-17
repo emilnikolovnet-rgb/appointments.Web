@@ -1,32 +1,28 @@
-# Стъпка 1: Изграждане на приложението (Build Stage)
+#git Стъпка 1: Изграждане на приложението (Build Stage)
 FROM node:22.22.3-alpine AS build
 WORKDIR /app
 
-# Копиране на конфигурационните файлове
 COPY package*.json ./
-
-# Инсталиране на зависимостите (включително devDependencies за билда)
 RUN npm ci
-
-# Копиране на сорс кода
 COPY . .
-
-# Компилиране на Angular SSR
-RUN npm run build
+RUN npm run build -- --configuration=production
 
 # Стъпка 2: Стартиране на производствената среда (Production Stage)
 FROM node:22.22.3-alpine AS runtime
 WORKDIR /app
 
-# Копиране само на компилирания проект от предишната стъпка
+# Копираме САМО компилирания проект от предишната стъпка
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/package*.json ./
 
-# Инсталиране само на производствените зависимости (dependencies) за по-малък имидж
-RUN npm ci --only=production
+# ВАЖНО: Новият Application Builder генерира вграден сървър в dist/DentistAppointments/server/
+# Затова в runtime етапа НЕ ви е нужен package.json или повторно npm ci --only=production!
+# Цялата логика и зависимост на сървъра вече са пакетирани там от Angular.
 
-# Експортиране на порта (Angular SSR по подразбиране често слуша на 4000 или Порт от средата)
+# Експортиране на порта за Azure Container Apps
 EXPOSE 4000
+ENV PORT=4000
+ENV NODE_ENV=production
 
-# Стартиране на Express сървъра (името на скрипта от вашия package.json)
-CMD ["npm", "run", "serve:ssr:DentistAppointments"]
+# СТАРТИРАНЕ: Извикваме Node директно към генерирания сървърен файл,
+# което премахва проблема с "Header host is not allowed".
+CMD ["node", "dist/DentistAppointments/server/server.mjs"]

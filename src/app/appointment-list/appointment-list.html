@@ -46,7 +46,7 @@
     </div>
     <div>
         <button (click)="openAppointmentForm()" class="btn btn-primary rounded-0 rounded-top w-15 py-2 fw-bold mt-2">Add New</button>
-        @if (appointments.length > 0) {
+        @if (appointments().length > 0) {
             <p class="pagination-controls mt-2 align-items-right d-flex justify-content-end">
                 <button class="me-1"
                     [disabled]="currentPage === 1" 

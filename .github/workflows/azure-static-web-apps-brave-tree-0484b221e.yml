@@ -4,7 +4,7 @@ name: Deploy Angular SSR to Azure Container Apps
 on:
   push:
     branches:
-      - main # Сменете го с "master", ако това е основният ви клон
+      - master # Сменете го с "master", ако това е основният ви клон
 
 jobs:
   build-and-deploy:

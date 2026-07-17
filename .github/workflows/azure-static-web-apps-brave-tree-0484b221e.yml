@@ -1,0 +1,47 @@
+name: Deploy Angular SSR to Azure Container Apps
+
+on:
+  push:
+    branches:
+      - main # Сменете го с "master", ако това е основният ви клон
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Сваляне на кода от GitHub
+    - name: Checkout to the repository
+      uses: actions/checkout@v4
+
+    # 2. Вход в Azure Container Registry (ACR)
+    - name: Log in to Azure Container Registry
+      uses: azure/docker-login@v2
+      with:
+        login-server: ${{ secrets.ACR_USERNAME }}.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    # 3. Изграждане и изпращане на Docker имиджа към ACR
+    - name: Build and push Docker image
+      run: |
+        docker build -t ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:${{ github.sha }} -t ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:latest .
+        docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:${{ github.sha }}
+        docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:latest
+
+    # 4. Вход в Azure акаунта
+    - name: Log in to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # 5. Обновяване на Azure Container App с новия имидж
+    - name: Deploy to Azure Container Apps
+      uses: azure/CLI@v2
+      with:
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          az containerapp update \
+            --name web-appointments \
+            --resource-group rg-appointments \
+            --image ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:${{ github.sha }}

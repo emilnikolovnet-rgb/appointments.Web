@@ -43,7 +43,11 @@ jobs:
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          
+          # Изрично добавяне на разширението, за да сме сигурни, че CLI разпознава командата
+          az extension add --name containerapp --upgrade
+          
           az containerapp update \
             --name ca-appointments-web \
             --resource-group rg-appointments \
-            --image ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:${{ github.sha }}
+            --image ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:${{ github.sha }

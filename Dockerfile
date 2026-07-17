@@ -23,6 +23,8 @@ EXPOSE 4000
 ENV PORT=4000
 ENV NODE_ENV=production
 
+ENV NG_ALLOWED_HOSTS="ca-appointments-web.jollyflower-ae4998fd.westus2.azurecontainerapps.io"
+
 # СТАРТИРАНЕ: Извикваме Node директно към генерирания сървърен файл,
 # което премахва проблема с "Header host is not allowed".
 CMD ["node", "dist/DentistAppointments/server/server.mjs"]

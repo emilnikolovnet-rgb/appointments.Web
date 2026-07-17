@@ -1,5 +1,6 @@
 name: Deploy Angular SSR to Azure Container Apps
 
+
 on:
   push:
     branches:

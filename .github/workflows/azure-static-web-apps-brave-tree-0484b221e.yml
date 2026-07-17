@@ -50,4 +50,4 @@ jobs:
           az containerapp update \
             --name ca-appointments-web \
             --resource-group rg-appointments \
-            --image ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:${{ github.sha }
+            --image ${{ secrets.ACR_USERNAME }}.azurecr.io/dentist-appointments-frontend:${{ github.sha }}
